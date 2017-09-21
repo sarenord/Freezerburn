@@ -1,7 +1,7 @@
 package main
 import (
 	"fmt"
-//	"strings"
+	"strings"
 	"io/ioutil"
 	"encoding/json"
 	"os"
@@ -76,6 +76,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	fmt.Println(m.Content)}
-
-
+	t, err := m.Timestamp.Parse()
+	tString := time.Time.String(t)
+	stamp := strings.Split(tString, " ")
+	tString = strings.Join(strings.Split(stamp[1], "")[:8], "")
+	
+	fmt.Println(t, m.Author.Username,":", m.Content)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}

@@ -72,18 +72,24 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+	logGen(m)
 	//ignore the bot's own messages
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	t, err := m.Timestamp.Parse()
-	tString := time.Time.String(t)
-	stamp := strings.Split(tString, " ")
-	tString = strings.Join(strings.Split(stamp[1], "")[:8], "")
 	
-	fmt.Println(t, m.Author.Username,":", m.Content)
+}
+
+func logGen(m *discordgo.MessageCreate) { 
+	t, err := m.Timestamp.Parse()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	tString := strings.Split(t.String(), " ")
+	stamp := []string{tString[0], strings.Join(strings.Split(tString[1], "")[:8], "")}
+	fmt.Println(stamp)
+	logline := []string{stamp[0], stamp[1], strings.Join([]string{m.Author.Username, ":"}, ""), m.Content}
+	fmt.Println(strings.Join(logline, " "))
 }
+

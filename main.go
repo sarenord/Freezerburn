@@ -12,20 +12,11 @@ import (
 
 type Object struct {
 	Token string
-	Guild string
+	CommandChar string
 }
-
-
-
 var bot Object
 var err error
 var start int64
-
-
-
-
-
-
 
 func main() {
 	start=time.Now().UnixNano()
@@ -77,7 +68,18 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	
+	if strings.Contains(m.Content, bot.CommandChar){
+		command := strings.Split(strings.TrimLeft(m.Content, bot.CommandChar), " ")
+		switch command[0] {
+			case "Clearchan":
+			s.ChannelMessageSend(m.ChannelID, "clearing channel")
+			bot.ClearChan(s, m.Message)
+			s.ChannelMessageSend(m.ChannelID, "Channel Cleared"
+			break;
+		default:
+			return
+		}
+	}
 }
 
 func logGen(m *discordgo.MessageCreate) { 
